@@ -160,6 +160,6 @@ app.use(function(req, res, next) {
 });
 
 
-app.listen(process.env.PORT, function() {
+app.listen('https://yuebot.herokuapp.com/', function() {
 	console.log('Servidor on');
 });
