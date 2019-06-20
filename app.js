@@ -1,7 +1,7 @@
 
 const express = require("express");
 
-const { Permissions } = require("discord.js")
+const { Permissions } = require("discord.js");
 
 const request = require("request");
 
@@ -13,6 +13,8 @@ const app = express()
 
 const Client = require('./structures/client.js')
 
+const client = Client()
+
 const database = require('./database.js')
 
 app.set('trust proxy', 1);
@@ -21,9 +23,26 @@ const session = require("express-session");
 
 app.use(session({ secret: 'keyboard cat', cookie: { }, resave: false,saveUninitialized: true,}))
 
+const bodyParser = require('body-parser')
+app.use( bodyParser.json() );       
+  app.use(bodyParser.urlencoded({     
+    extended: true
+})); 
+
 app.get("/logout", function(req, res) {
   if(req.session.user) req.session.user = null
   return res.redirect("/")
+})
+
+app.get("/commands", function(req, res) {
+  res.render("commands.ejs", {
+    
+   logged: req.session.user,
+
+   user: req.session.user ? req.session.user : "",
+    
+  client: client
+  })
 })
 
 app.get("/",function(req,res){
@@ -34,7 +53,7 @@ app.get("/",function(req,res){
 
    user: req.session.user ? req.session.user : "",
     
-   database: database
+   client: client
 
 })
 
@@ -110,9 +129,7 @@ app.get("/login",async function (req, res) {
 app.get("/dashboard", async function(req, res) {
   
   if(!req.session.user) return res.redirect('/log')
-  
-  const client = Client()
-  
+    
   
   res.render('dashboard.ejs', {
     
@@ -131,19 +148,199 @@ app.get("/dashboard", async function(req, res) {
   })
 });
 
+app.post("/config/change", async function(req,res){
+    const { guild, prefix, language } = req.body
+    
+    if(!guild) return res.end("Inválido")
+  
+    if(!prefix && !language) return res.end("É necessário informar o prefixo ou a linguagem")
+  
+    const data = await database.Guilds.findOne({_id: guild})  
+    
+    if(prefix) {
+      data.prefix = prefix
+    }
+  
+    if(language) {
+      data.language = language
+    }
+  
+    data.save()
+    return console.log('Prefixo alterado')
+})
+
+app.post("/config/welcome", async function(req, res) {
+  const { guild, welcomeMessage, leftMessage, channel } = req.body
+      
+  const guildGiven = client.guilds.get(guild);
+  
+  if(!guildGiven) return res.redirect("/404")
+  
+  if(!channel) return res.end("É necessário informar o canal")
+  
+      
+  const givenChannel = guildGiven.channels.get(channel)
+    
+  const data = await database.Guilds.findOne({_id: guild})
+  
+  if(!data) {
+    const newGuild = database.Guilds({
+      _id: guild.id
+    })
+    
+    newGuild.save()
+    return res.end("Informe as informações novamente, o servidor não estava registrado no meu banco de dados")
+  }
+  
+  
+  if(!leftMessage && !welcomeMessage) return res.end("É necessário informar a mensagem de boas-vindas ou de saída")
+  
+  if(welcomeMessage) data.welcomeMessage = welcomeMessage
+  if(leftMessage) data.leftMessage = leftMessage
+    
+  data.welcomeChannel = givenChannel.id
+  data.leftChannel = givenChannel.id
+  data.save()
+  console.log("Canal atualizado")
+})
+
+app.post("/config/logs", async function(req, res) {
+  const { guild, channel } = req.body
+      
+  const guildGiven = client.guilds.get(guild);
+  
+  if(!guildGiven) return res.redirect("/404")
+  
+  if(!channel) return res.end("É necessário informar o canal")
+        
+  const givenChannel = guildGiven.channels.get(channel)
+    
+  const data = await database.Guilds.findOne({_id: guild})
+  
+  if(!data) {
+    const newGuild = database.Guilds({
+      _id: guild.id
+    })
+    
+    newGuild.save()
+    return res.end("Informe as informações novamente, o servidor não estava registrado no meu banco de dados")
+  }
+    
+  data.logChannel = givenChannel.id
+  data.save()
+  console.log("Canal atualizado")
+})
+
 app.get("/dashboard/:id", async function(req, res) {
   
   if(!req.session.user) return res.redirect('/log')
-  
-  const client = Client();
-  
+    
   const guild = client.guilds.get(req.params.id);
   
   if(!guild) return res.redirect('/404');
-    
-
   
+  const guilds = req.session.guilds
+  
+  for(let x = 0; x < guilds.length; x++) {
+    if(guilds[x].id == req.params.id) {
+      const newPerm = new Permissions(guilds[x].permissions)
+      
+      if(newPerm.has("MANAGE_GUILD") || newPerm.has("ADMINISTRATOR") || guilds[x].owner == true ) {
+        res.render("config.ejs", {
+
+         logged: req.session.user,
+
+         client: client,
+
+         perm: Permissions,
+
+         user: req.session.user ? req.session.user : "",
+
+         guild: guild ? guild : "",
+
+         database: database
+        })   
+      } else {
+        res.redirect('/dashboard')
+      }
+    }
+  }
 })
+
+app.get("/dashboard/:id/logs", async function(req, res) {
+  
+  if(!req.session.user) return res.redirect('/log')
+    
+  const guild = client.guilds.get(req.params.id);
+  
+  if(!guild) return res.redirect('/404');
+  
+  const guilds = req.session.guilds
+  
+  for(let x = 0; x < guilds.length; x++) {
+    if(guilds[x].id == req.params.id) {
+      const newPerm = new Permissions(guilds[x].permissions)
+      
+      if(newPerm.has("MANAGE_GUILD") || newPerm.has("ADMINISTRATOR") || guilds[x].owner == true ) {
+        res.render("logs.ejs", {
+
+         logged: req.session.user,
+
+         client: client,
+
+         perm: Permissions,
+
+         user: req.session.user ? req.session.user : "",
+
+         guild: guild ? guild : "",
+
+         database: database
+        })   
+      } else {
+        res.redirect('/dashboard')
+      }
+    }
+  }
+})
+
+app.get("/dashboard/:id/welcome", async function(req, res) {
+  
+  if(!req.session.user) return res.redirect('/log')
+    
+  const guild = client.guilds.get(req.params.id);
+  
+  if(!guild) return res.redirect('/404');
+  
+  const guilds = req.session.guilds
+  
+  for(let x = 0; x < guilds.length; x++) {
+    if(guilds[x].id == req.params.id) {
+      const newPerm = new Permissions(guilds[x].permissions)
+      
+      if(newPerm.has("MANAGE_GUILD") || newPerm.has("ADMINISTRATOR") || guilds[x].owner == true ) {
+        res.render("welcome.ejs", {
+
+         logged: req.session.user,
+
+         client: client,
+
+         perm: Permissions,
+
+         user: req.session.user ? req.session.user : "",
+
+         guild: guild ? guild : "",
+
+         database: database
+        })   
+      } else {
+        res.redirect('/dashboard')
+      }
+    }
+  }
+})
+
+app.use('/assets', express.static('assets'));
+
 
 app.use(function(req, res, next) {
   res.status(404).render("error.ejs", {
@@ -154,7 +351,9 @@ app.use(function(req, res, next) {
     
     guilds: req.session.guilds ? req.session.guilds : "",
     
-    database: database
+    database: database,
+    
+    client: client
 
   })
 });
