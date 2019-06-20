@@ -8,8 +8,8 @@
         <meta name="theme-color" content="#7289DA">  
         <meta property="og:title" content="Yue - Dashboard">
         <meta property="og:site_name" content="Yue">
-        <meta property="og:url" content="https://yue-discord.glitch.me/dashboard">
-        <meta property="og:image" content="https://cdn.discordapp.com/avatars/575720609984544782/9183b41f2a982b3e643c50a801a37d1b.png">
+        <meta property="og:url" content="https://yue-discord.glitch.me/">
+        <meta property="og:image" content="<%=client.user.displayAvatarURL%>">
         <meta property="og:description" content="Um simples bot para discord que possue muitas funcionalidades ^-^">
         <link rel="stylesheet" href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> 
@@ -17,20 +17,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.3/css/mdb.min.css">
-        <link rel="icon" href="https://images-ext-1.discordapp.net/external/_6Lj9PUXyQjz-vpNLfaIivweovcQBXmswTpZOScz_Zs/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/575720609984544782/9183b41f2a982b3e643c50a801a37d1b.png">
-         <style type="text/css">
-            .white {
-                background-color: white;
-            }
-
-            .dark {
-                background-color: #23272A;
-            }
-
-        </style>
+        <link rel="icon" href="<%=client.user.displayAvatarURL%>">
     </head>
 
-    <body class="white" id="body">
+    <body id="body" style="background-color: #24293D;">
 
       <div class="navbar navbar-dark blue lighten-1 sticky-top d-flex p2">
             <nav class="navbar-expand-md d-flex flex-grow-1">
@@ -117,7 +107,7 @@
                 ">
                   <%}%>
                 </a>
-                <h5 class="card-title" id="nome" style="font-size: 17px;"><%=guilds[x].name%></h5>
+                <h5 class="card-title" id="nome"><%=guilds[x].name%></h5>
                                                       
                   <%if(client.guilds.get(guilds[x].id)) {%>
                   
@@ -140,42 +130,7 @@
                     
           <%}%>
           
-        
 
-        <!--
-
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-            Salvar
-        </button>
-
- Salvar
-<br>
-<div class="modal fade" id="myModal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-
-      Modal Header
-      <div class="modal-header">
-        <h4 class="modal-title">
-            <i class="fas fa-check-circle"></i> Sucesso
-        </h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-
-      Modal body
-      <div class="modal-body">
-        As configurações foram salvas com sucesso
-      </div>
-
-    Modal footer
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-      </div>
-
-    </div>
-  </div>
-</div>-->
-          
 
 <script>
    $(document).ready(function(){
