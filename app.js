@@ -7,7 +7,7 @@ const request = require("request");
 
 const bt = require("btoa");
 
-const {redirect_uri,id,secret} = require("./config.json")
+const { REDIRECT_URI, ID, SECRET} = process.env
 
 const app = express()
 
