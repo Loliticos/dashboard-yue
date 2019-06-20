@@ -1,9 +1,9 @@
   {
 
-    "redirect_uri":"https%3A%2F%2Fyue-discord.glitch.me%2Flogin&response_type=code&scope=identify%20guilds",
+    "redirect_uri": "REDIRECT_URI",
 
-    "id": "575720609984544782",
+    "id": "APPLICATION_ID",
 
-    "secret": "XO8DQXCN2cGhY_oY5Dv0lI-XExutvykM"
+    "secret": "APPLICATION_SECRET"
 
   }
