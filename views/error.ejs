@@ -12,10 +12,9 @@
         <meta property="og:site_name" content="Yue">
         <meta property="og:url" content="https://yue-discord.glitch.me/">
         <meta property="og:description" content="Um simples bot para discord que possue muitas funcionalidades ^-^">
-        <meta property="og:image" content="https://images-ext-1.discordapp.net/external/_6Lj9PUXyQjz-vpNLfaIivweovcQBXmswTpZOScz_Zs/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/575720609984544782/9183b41f2a982b3e643c50a801a37d1b.png">
+        <meta property="og:image" content="<%=client.user.displayAvatarURL%>">
               
-        <!-- import the webpage's javascript file -->
-        <link rel="icon" href="https://images-ext-1.discordapp.net/external/_6Lj9PUXyQjz-vpNLfaIivweovcQBXmswTpZOScz_Zs/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/575720609984544782/9183b41f2a982b3e643c50a801a37d1b.png">
+        <link rel="icon" href="<%=client.user.displayAvatarURL%>">
 
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css">
@@ -31,7 +30,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     </head>
 
-    <body>
+    <body style="background-color: #24293D;">
 
       <div class="navbar navbar-dark blue lighten-1 sticky-top d-flex p2">
             <nav class="navbar-expand-md d-flex flex-grow-1">
@@ -88,8 +87,8 @@
                 </div>
             </nav>
         </div>
-        <div class="container mt-3 text-center">
-            <img src="https://images-ext-1.discordapp.net/external/_6Lj9PUXyQjz-vpNLfaIivweovcQBXmswTpZOScz_Zs/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/575720609984544782/9183b41f2a982b3e643c50a801a37d1b.png" alt="Yue" width="150px;" class="mb-3 rounded-circle">  
+        <div class="container mt-3 text-center" style="color: white;">
+            <img src="<%=client.user.displayAvatarURL%>" alt="Yue" width="150px;" class="mb-3 rounded-circle">  
             <h1>404</h1>
             <p>Página não encontrada</p>
         </div>
